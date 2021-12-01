@@ -7,6 +7,7 @@ from pydantic import BaseModel
 # fastAPI
 from fastapi import FastAPI, Body
 
+
 app = FastAPI()
 
 # Models
@@ -30,3 +31,4 @@ def create_person(person: Person = Body(...)): # el operador '...' indica que el
     return person
 
 # Validation
+
