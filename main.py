@@ -5,7 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 # fastAPI
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Query
 
 
 app = FastAPI()
@@ -32,3 +32,9 @@ def create_person(person: Person = Body(...)): # el operador '...' indica que el
 
 # Validation
 
+@app.get('/person/detail')
+def show_person(
+    name: Optional[str] = Query(None, min_length=1, max_length=50),
+    age: int = Query(...)
+):
+    return {name: age}
