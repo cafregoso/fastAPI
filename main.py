@@ -46,6 +46,10 @@ class Person(BaseModel):
     )
     hair_color: Optional[HairColor] = Field(default=None, example=HairColor.red) # parametro opcional, si no se incluye se manda None
     is_married: Optional[bool] = Field(default=None, example=False)
+    password: str = Field(
+        ...,
+        min_length=8,
+    )
 
     # class Config:
     #     schema_extra = {
@@ -58,6 +62,29 @@ class Person(BaseModel):
     #         }
     #     }
 
+# PersonOut doesn't return password
+class PersonOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example='Carlos'
+    )
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example='Alvarez'
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115,
+        example=26
+    )
+    hair_color: Optional[HairColor] = Field(default=None, example=HairColor.red) # parametro opcional, si no se incluye se manda None
+    is_married: Optional[bool] = Field(default=None, example=False)
+
 @app.get("/")
 def home():
     return {"Hello": "World again"}
@@ -65,7 +92,7 @@ def home():
 
 # request and response body
 
-@app.post("/person/new")
+@app.post("/person/new", response_model=PersonOut)
 def create_person(person: Person = Body(...)): # el operador '...' indica que el parametro es obligatorio
     return person
 
