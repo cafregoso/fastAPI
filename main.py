@@ -6,7 +6,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 # fastAPI
-from fastapi import FastAPI, Body, Query, Path
+from fastapi import FastAPI, Body, Query, Path, status
 
 
 app = FastAPI()
@@ -44,8 +44,14 @@ class PersonBase(BaseModel):
         le=115,
         example=26
     )
-    hair_color: Optional[HairColor] = Field(default=None, example=HairColor.red) # parametro opcional, si no se incluye se manda None
-    is_married: Optional[bool] = Field(default=None, example=False)
+    hair_color: Optional[HairColor] = Field(
+        default=None, 
+        example=HairColor.red,
+    ) # parametro opcional, si no se incluye se manda None
+    is_married: Optional[bool] = Field(
+        default=None,
+        example=False,
+    )
 
 class Person(PersonBase):
     password: str = Field(
@@ -58,7 +64,7 @@ class Person(PersonBase):
 class PersonOut(PersonBase):
     pass
 
-@app.get("/")
+@app.get("/", status_code=status.HTTP_200_OK)
 def home():
     return {"Hello": "World again"}
 
