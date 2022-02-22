@@ -1,4 +1,7 @@
 # Pythom
+from email import message
+from email.errors import MessageError
+from importlib.resources import path
 from turtle import st
 from typing import Optional
 from enum import Enum
@@ -7,7 +10,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 # fastAPI
-from fastapi import FastAPI, Body, Query, Path, status
+from fastapi import FastAPI, Body, Query, Path, Form, status
 
 
 app = FastAPI()
@@ -65,6 +68,16 @@ class Person(PersonBase):
         min_length=8,
         example='passwordTest'
     )
+
+
+class LoginOut(BaseModel):
+    username: str = Field(
+        ..., 
+        max_length=30, 
+        example='cafregoso',
+    )
+    message: str = Field(default='Login Succesfully!')
+
 
 # PersonOut doesn't return password
 class PersonOut(PersonBase):
@@ -140,4 +153,15 @@ def update_person(
     # results.update(location.dict())
     return person
 
-    
+#Formularios
+
+@app.post(
+    path='/login',
+    response_model=LoginOut,
+    status_code=status.HTTP_200_OK,
+)
+def login(
+    username: str = Form(...),
+    password: str = Form(...),
+):
+    return LoginOut(username=username)
