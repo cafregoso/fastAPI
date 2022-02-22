@@ -1,4 +1,5 @@
 # Pythom
+from turtle import st
 from typing import Optional
 from enum import Enum
 
@@ -26,28 +27,33 @@ class Location(BaseModel):
     country: str
 
 class PersonBase(BaseModel):
+
     first_name: str = Field(
         ...,
         min_length=1,
         max_length=50,
         example='Carlos'
     )
+
     last_name: str = Field(
         ...,
         min_length=1,
         max_length=50,
         example='Alvarez'
     )
+
     age: int = Field(
         ...,
         gt=0,
         le=115,
         example=26
     )
+
     hair_color: Optional[HairColor] = Field(
         default=None, 
         example=HairColor.red,
     ) # parametro opcional, si no se incluye se manda None
+
     is_married: Optional[bool] = Field(
         default=None,
         example=False,
@@ -64,20 +70,27 @@ class Person(PersonBase):
 class PersonOut(PersonBase):
     pass
 
-@app.get("/", status_code=status.HTTP_200_OK)
+@app.get(path='/', status_code=status.HTTP_200_OK)
 def home():
     return {"Hello": "World again"}
 
 
 # request and response body
 
-@app.post("/person/new", response_model=PersonOut)
+@app.post(
+    path='/person/new', 
+    response_model=PersonOut,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_person(person: Person = Body(...)): # el operador '...' indica que el parametro es obligatorio
     return person
 
 # Validation
 
-@app.get('/person/detail')
+@app.get(
+    path='/person/detail',
+    status_code=status.HTTP_200_OK,
+)
 def show_person(
     name: Optional[str] = Query(
         None,
@@ -95,7 +108,10 @@ def show_person(
     return {name: age}
 
 
-@app.get("/person/detail/{person_id}")
+@app.get(
+    path="/person/detail/{person_id}",
+    status_code=status.HTTP_200_OK,
+)
 def show_person(
     person_id: int = Path(
         ...,
@@ -106,7 +122,10 @@ def show_person(
 
 # Validation request body
 
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def update_person(
     person_id: int = Path(
         ...,
