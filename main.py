@@ -1,7 +1,4 @@
-# Pythom
-from importlib.resources import path
-from tkinter.messagebox import NO
-from turtle import st
+# Python
 from typing import Optional
 from enum import Enum
 
@@ -9,7 +6,7 @@ from enum import Enum
 from pydantic import BaseModel, Field, EmailStr
 
 # fastAPI
-from fastapi import FastAPI, Body, Header, Query, Path, Form, status, Header, Cookie
+from fastapi import FastAPI, Body, File, Header, Query, Path, Form, UploadFile, status, Header, Cookie
 
 
 app = FastAPI()
@@ -190,3 +187,15 @@ def contact(
     ads: Optional[str] = Cookie(default=None),
 ):
     return user_agent
+
+@app.post(
+    path="/post-image",
+)
+def post_image(
+    image: UploadFile = File(...)
+):
+    return {
+        "Filename": image.filename,
+        "Format": image.content_type, 
+        "Size(kb)": round(len(image.file.read()) / 1024, ndigits=2)
+    }
