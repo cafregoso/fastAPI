@@ -88,9 +88,6 @@ class PersonOut(PersonBase):
     tags=['Home'],
 )
 def home():
-    """
-        
-    """
     return {"Hello": "World again"}
 
 
@@ -101,8 +98,20 @@ def home():
     response_model=PersonOut,
     status_code=status.HTTP_201_CREATED,
     tags=['Persons'],
+    summary='Create person in the app'
 )
 def create_person(person: Person = Body(...)): # el operador '...' indica que el parametro es obligatorio
+    """
+        Create Person
+
+        This path operation creates a person in the app and save information in the DB
+
+        Params: 
+        - Request body parameter:
+            - **person: Person** -> A person model with first name, last name, age, hair color and marital status
+        
+        Returns a person model with first name, last name, age, hair color and marital status
+    """
     return person
 
 # Validation
