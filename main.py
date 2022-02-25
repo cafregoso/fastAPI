@@ -82,8 +82,15 @@ class LoginOut(BaseModel):
 class PersonOut(PersonBase):
     pass
 
-@app.get(path='/', status_code=status.HTTP_200_OK)
+@app.get(
+    path='/', 
+    status_code=status.HTTP_200_OK,
+    tags=['Home'],
+)
 def home():
+    """
+        
+    """
     return {"Hello": "World again"}
 
 
@@ -93,6 +100,7 @@ def home():
     path='/person/new', 
     response_model=PersonOut,
     status_code=status.HTTP_201_CREATED,
+    tags=['Persons'],
 )
 def create_person(person: Person = Body(...)): # el operador '...' indica que el parametro es obligatorio
     return person
@@ -102,6 +110,7 @@ def create_person(person: Person = Body(...)): # el operador '...' indica que el
 @app.get(
     path='/person/detail',
     status_code=status.HTTP_200_OK,
+    tags=['Persons'],
 )
 def show_person(
     name: Optional[str] = Query(
@@ -124,6 +133,7 @@ persons = [1, 2, 3, 4, 5]
 @app.get(
     path="/person/detail/{person_id}",
     status_code=status.HTTP_200_OK,
+    tags=['Persons'],
 )
 def show_person(
     person_id: int = Path(
@@ -145,6 +155,7 @@ def show_person(
 @app.put(
     path="/person/{person_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    tags=['Persons'],
 )
 def update_person(
     person_id: int = Path(
@@ -166,6 +177,7 @@ def update_person(
     path='/login',
     response_model=LoginOut,
     status_code=status.HTTP_200_OK,
+    tags=['Persons'],
 )
 def login(
     username: str = Form(...),
@@ -177,6 +189,7 @@ def login(
 @app.post(
     path='/contact',
     status_code=status.HTTP_200_OK,
+    tags=['Contact']
 )
 def contact(
     first_name: str = Form(
@@ -201,6 +214,7 @@ def contact(
 
 @app.post(
     path="/post-image",
+    tags=['Media']
 )
 def post_image(
     image: UploadFile = File(...)
